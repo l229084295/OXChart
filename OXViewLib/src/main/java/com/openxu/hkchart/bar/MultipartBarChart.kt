@@ -54,8 +54,11 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
     private lateinit var yAxisMark : YAxisMark
     private lateinit var xAxisMark : XAxisMark
     private lateinit var barColor : IntArray
+    private lateinit var valueTextColor: IntArray
     private var focusPanelText: Array<FocusPanelText>? = null  //焦点面板显示内容
     private var dataTotalCount : Int = -1
+    private var isBarOverlay: Boolean = false
+    private var isShowValueText: Boolean = false
     /**初步计算*/
     private var barWidth : Float = 0f  //柱宽度
     private var spacingRatio = 1f
@@ -78,10 +81,13 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
         xAxisMark = config.xAxisMark!!
         yAxisMark = config.yAxisMark!!
         barColor = config.barColor
+        valueTextColor = config.valueTextColor
         barWidth = config.barWidth
         spacingRatio = config.spacingRatio
         barSpace = barWidth * spacingRatio
 
+        isShowValueText = config.isShowValueText
+        isBarOverlay = config.isBarOverlay
         dataTotalCount = config.dataTotalCount
         if(dataTotalCount<0)
             dataTotalCount = datas.size
@@ -89,7 +95,7 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
 
         /**重新确定表体矩形rectChart*/
         paintText.textSize = xAxisMark.textSize.toFloat()
-        xAxisMark.textHeight = FontUtil.getFontHeight(paintText)
+        xAxisMark.textHeight = if (config.xTextHeight != 0f) config.xTextHeight else FontUtil.getFontHeight(paintText)
         xAxisMark.textLead = FontUtil.getFontLeading(paintText)
         //确定图表最下放绘制位置
         rectChart.bottom = rectDrawBounds.bottom - (xAxisMark.textHeight + xAxisMark.textSpace)
@@ -270,12 +276,28 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
             }
             for(vindex : Int in _datas[index].valuey.indices){
                 paint.color = barColor[vindex]
-                if (_datas[index].valuey[vindex] != null) {
+                if (_datas[index].valuey[vindex] == null) {
+                    continue
+                }
+                if (isBarOverlay){//覆盖值
+                    val vh = rectChart.height() / (yAxisMark.cal_mark_max - yAxisMark.cal_mark_min) *
+                            (_datas[index].valuey[vindex] - yAxisMark.cal_mark_min) * chartAnimValue
+                    rect.top = rectChart.bottom - vh
+                    canvas?.drawRect(rect, paint)
+                }else{
                     val vh = rectChart.height() / (yAxisMark.cal_mark_max - yAxisMark.cal_mark_min) *
                             (_datas[index].valuey[vindex] - yAxisMark.cal_mark_min) * chartAnimValue
                     rect.top -= vh
                     canvas?.drawRect(rect, paint)
                     rect.bottom = rect.top
+                }
+                /**绘制值文本**/
+                if (isShowValueText){
+                    paintText.color = barColor[vindex]
+                    val text = "${_datas[index].valuey[vindex].toInt()}"
+                    canvas?.drawText(text,
+                        rect.centerX() - FontUtil.getFontlength(paintText, text) / 2 ,
+                        rect.top - DensityUtil.dip2px(context, 1f).toFloat(), paintText)
                 }
             }
             if(barLayer!=null)
@@ -285,11 +307,16 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
 //            canvas?.drawText("$i", rect.left + (barWidth*scalex) / 2 - FontUtil.getFontlength(paintText, "$i") / 2, xAxisMark.drawPointY, paintText)
             //从第一条数据开始每隔xIndexSpace绘制一个x刻度
             if((index - startIndex) % xIndexSpace == 0){
-                val x = rect.left + (barWidth*scalex) / 2 - FontUtil.getFontlength(paintText, _datas[index].valuex) / 2
+                barLayer = canvas?.save()
+                paintText.color = yAxisMark.textColor
+                val x = rect.left + (barWidth*scalex) / 2 - FontUtil.getFontlength(paintText, _datas[index].valuex) / 2 + xAxisMark.offsetX
                 //过滤掉超出图表范围的x值绘制，通常是第一条和最后一条
                 if(x < paddingLeft || x+FontUtil.getFontlength(paintText, _datas[index].valuex) > measuredWidth - paddingRight)
                     continue
+                canvas?.rotate(xAxisMark.textRotateAngle, x, xAxisMark.drawPointY)
                 canvas?.drawText(_datas[index].valuex, x,xAxisMark.drawPointY, paintText)
+                if(barLayer!=null)
+                    canvas?.restoreToCount(barLayer)
             }
         }
 
@@ -328,11 +355,6 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
         paint.alpha = 230
         canvas.drawRect(rect, paint)
         //面板中的文字
-        //2020-10-16 06：00
-        //零序电流:15.2KW
-        //A相电流:15.2KW
-        //A相电流:15.2KW
-        //A相电流:15.2KW
         var text = ""
         var top: Float = rect.top + foucsRectSpace
         val currentPoint = PointF()
@@ -558,10 +580,11 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
             xTextMaxLength = xTextMaxLength.coerceAtLeast(FontUtil.getFontlength(paintText, _datas[index].valuex))
         }
         //当前绘制宽度 / x刻度最长
-        var xNumber = ((allDataWidth * scalex).coerceAtMost(rectChart.width()) / xTextMaxLength).toInt()
+//        var xNumber = ((allDataWidth * scalex).coerceAtMost(rectChart.width()) / xTextMaxLength).toInt()
+        var xNumber = xAxisMark.lableNum
         val dataNumber = endIndex - startIndex + 1
         LogUtil.e(TAG, "绘制的数据条数${endIndex-startIndex+1}  X轴文字最长长度$xTextMaxLength   理论最多可显示$xNumber 个")
-        xNumber = Math.min(xNumber, xAxisMark.lableNum)
+//        xNumber = Math.min(xNumber, xAxisMark.lableNum)
         when(xNumber){
             1->xIndexSpace = endIndex - startIndex + 10   //只显示第一个
             2->xIndexSpace = endIndex - startIndex   //显示第一个和最后一个

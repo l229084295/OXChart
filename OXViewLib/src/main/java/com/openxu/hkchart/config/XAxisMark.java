@@ -14,6 +14,8 @@ public class XAxisMark {
     public int textSize;   //设置坐标文字大小
     public int textColor;  //设置坐标文字颜色
     public int textSpace;  //设置坐标字体与横轴的距离
+    public float textRotateAngle; //设置坐标文字旋转角度
+    public float offsetX;//偏移量
     //2选1设置
     public int lableNum = 5;
     public int splitSubLen = -1;
