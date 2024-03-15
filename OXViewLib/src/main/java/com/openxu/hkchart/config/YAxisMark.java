@@ -24,6 +24,7 @@ public class YAxisMark {
 
     public int lineWidth;
     public int lineColor;
+    public boolean isDrawAxisLine = true; //是否绘制Y轴坐标线
 
     public int lableNum;
     public MarkType markType;

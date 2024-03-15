@@ -31,6 +31,7 @@ import com.openxu.hkchart.data.LinePoint;
 import com.openxu.hkchart.view.EchartOptionUtil;
 import com.openxu.hkchart.view.EchartView;
 import com.openxu.utils.DensityUtil;
+import com.openxu.utils.LogUtil;
 
 import org.json.JSONObject;
 
@@ -40,6 +41,9 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class FpcActivity extends AppCompatActivity {
 
@@ -157,11 +161,11 @@ public class FpcActivity extends AppCompatActivity {
                 multipartBarChart2 = findViewById(R.id.multipartBarChart2);
                 multipartBarChart3 = findViewById(R.id.multipartBarChart3);
                 YAxisMark yAxisMark = new YAxisMark.Builder(FpcActivity.this)
-                        .lableNum(5)   //y刻度数量
+                        .lableNum(6)   //y刻度数量
                         .numberTypeface(typeface)
                         .markType(MarkType.Float)
                         .digits(1)
-                        .unit("元")
+                        .unit("")
                         .build();
                 XAxisMark xAxisMark = new XAxisMark.Builder(FpcActivity.this)
                         .lableNum(10)   //最多显示的x刻度，并非一定显示10个，图表会自动根据x刻度文字长短适配
@@ -219,11 +223,12 @@ public class FpcActivity extends AppCompatActivity {
                 multipartBarChart1.setChartConfig(config);
                 config = new MultipartBarConfig(FpcActivity.this);
                 config.setDisplayScheme(DisplayScheme.SHOW_BEGIN);
-                config.setBarWidth(DensityUtil.dip2px(FpcActivity.this, 28));
-                config.setSpacingRatio(0.5f);
+                config.setBarWidth(DensityUtil.dip2px(FpcActivity.this, 15));
+                config.setSpacingRatio(1f);
+//                config.setSpacingRatio(0.5f);
                 xAxisMark.textRotateAngle = 50;
-                xAxisMark.offsetX = 5;
-                config.setXTextHeight(DensityUtil.dip2px(FpcActivity.this,100));
+                xAxisMark.offsetX = 8;
+                config.setXTextHeight(DensityUtil.dip2px(FpcActivity.this,110));
                 config.setXAxisMark(xAxisMark);
                 config.setYAxisMark(yAxisMark);
                 config.setShowAnim(true);
@@ -231,6 +236,13 @@ public class FpcActivity extends AppCompatActivity {
                 config.setShowValueText(true);
                 config.setBarOverlay(true);
                 multipartBarChart2.setChartConfig(config);
+                multipartBarChart2.setOnClick(new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        LogUtil.i(TAG,"点击了：" + integer);
+                        return null;
+                    }
+                });
                 config = new MultipartBarConfig(FpcActivity.this);
                 config.setDisplayScheme(DisplayScheme.SHOW_END);
                 config.setBarWidth(DensityUtil.dip2px(FpcActivity.this, 15));

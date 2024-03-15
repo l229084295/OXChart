@@ -28,6 +28,9 @@ class MultipartBarConfig(context: Context) : ChartConfigBase() {
     //是否显示值的文本
     var isShowValueText: Boolean = false
 
+    //是否间隔x轴标签
+    var isSpacingXTag: Boolean = false
+
     //柱颜色
     var barColor: IntArray = intArrayOf(
         Color.parseColor("#f46763"),

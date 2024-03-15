@@ -12,6 +12,7 @@ import com.openxu.hkchart.data.FocusPanelText
 import com.openxu.utils.DensityUtil
 import com.openxu.utils.FontUtil
 import com.openxu.utils.LogUtil
+import java.util.Collections
 import java.util.regex.Pattern
 
 /**
@@ -59,6 +60,7 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
     private var dataTotalCount : Int = -1
     private var isBarOverlay: Boolean = false
     private var isShowValueText: Boolean = false
+    private var isSpacingXTag: Boolean = false
     /**初步计算*/
     private var barWidth : Float = 0f  //柱宽度
     private var spacingRatio = 1f
@@ -155,11 +157,6 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
 
         focusPanelText?.let {
             //计算焦点面板
-            //2020-10-16 06：00
-            //零序电流:15.2KW
-            //A相电流:15.2KW
-            //A相电流:15.2KW
-            //A相电流:15.2KW
             foucsRectWidth = 0f
             foucsRectHeight = foucsRectSpace * 2.toFloat()
             var text: String
@@ -211,6 +208,10 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
         paint.strokeWidth = yAxisMark.lineWidth.toFloat()
         paint.color = yAxisMark.lineColor
         for (i in 0 until yAxisMark.lableNum) {
+            /****/
+            if (yAxisMark.isDrawAxisLine){
+                canvas!!.drawLine(rectChart.left, rectChart.bottom, rectChart.left, rectChart.top, paint)
+            }
             /**绘制横向线 */
             canvas!!.drawLine(rectChart.left, rectChart.bottom - yMarkSpace * i,
                     rectChart.right, rectChart.bottom - yMarkSpace * i, paint)
@@ -291,7 +292,7 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
                     canvas?.drawRect(rect, paint)
                     rect.bottom = rect.top
                 }
-                /**绘制值文本**/
+                /**绘制Y轴的值**/
                 if (isShowValueText){
                     paintText.color = barColor[vindex]
                     val text = "${_datas[index].valuey[vindex].toInt()}"
@@ -309,10 +310,10 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
             if((index - startIndex) % xIndexSpace == 0){
                 barLayer = canvas?.save()
                 paintText.color = yAxisMark.textColor
-                val x = rect.left + (barWidth*scalex) / 2 - FontUtil.getFontlength(paintText, _datas[index].valuex) / 2 + xAxisMark.offsetX
+                val x = rect.left + (barWidth * scalex) / 2 - FontUtil.getFontlength(paintText, _datas[index].valuex) / 2 + xAxisMark.offsetX
                 //过滤掉超出图表范围的x值绘制，通常是第一条和最后一条
-                if(x < paddingLeft || x+FontUtil.getFontlength(paintText, _datas[index].valuex) > measuredWidth - paddingRight)
-                    continue
+//                if(x < paddingLeft || x+FontUtil.getFontlength(paintText, _datas[index].valuex) > measuredWidth - paddingRight)
+//                    continue
                 canvas?.rotate(xAxisMark.textRotateAngle, x, xAxisMark.drawPointY)
                 canvas?.drawText(_datas[index].valuex, x,xAxisMark.drawPointY, paintText)
                 if(barLayer!=null)
@@ -394,8 +395,15 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
         focusPoint.x = detector.focusX
         focusPoint.y = detector.focusY
         onFocusTouch(focusPoint)
+        lastClickIndex = -1
         LogUtil.i(TAG, "缩放开始了，焦点索引为$focusIndex") // 缩放因子
     }
+
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
+        super.onScaleEnd(detector)
+        lastClickIndex = -1
+    }
+
     private var scaleXMax = 3f   //X轴方向最大放大倍数，需要根据柱子是否能填充图表计算
     override fun onScale(detector: ScaleGestureDetector, beginScrollx: Float) {
         scalex *= detector.scaleFactor
@@ -416,8 +424,10 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
             scrollXMax = 0f  //数据不能填充时，居中展示
             scrollx = 0f
         }
+        lastClickIndex = -1
     }
 
+    private var lastClickIndex = -1
     override fun onFocusTouch(point: PointF?) {
         try {
             focusData = null
@@ -451,7 +461,11 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
                     focusIndex = Math.max(0, Math.min(focusIndex, _datas.size - 1))
                     LogUtil.e(TAG, "========焦点索引：$focusIndex")
                     focusData = FocusData(_datas[focusIndex], it)
+                    lastClickIndex = focusIndex
                 }
+            }
+            if (point == null && lastClickIndex != -1){
+                clickListener?.invoke(lastClickIndex)
             }
 //            postInvalidate()
         } catch (e: Exception) {
@@ -483,6 +497,9 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
     }
     /**y值累加*/
     private fun getTotalValuey(data : MultipartBarData) : Float{
+        if (isBarOverlay){
+            return Collections.max(data.valuey)
+        }
         var valuey = 0f
         for(v in data.valuey)
             valuey+=v
@@ -570,7 +587,7 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
 
     /**根据startIndex~endIndex计算x标签间隔数量*/
     //从当前绘制的第一条数据开始，每隔多少展示一个x标签
-    private var xIndexSpace: Int = 0
+    private var xIndexSpace: Int = 1
     private fun caculateXMark() {
         caculateIndex()
         paintText.textSize = xAxisMark.textSize.toFloat()
@@ -585,6 +602,7 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
         val dataNumber = endIndex - startIndex + 1
         LogUtil.e(TAG, "绘制的数据条数${endIndex-startIndex+1}  X轴文字最长长度$xTextMaxLength   理论最多可显示$xNumber 个")
 //        xNumber = Math.min(xNumber, xAxisMark.lableNum)
+        if (!isSpacingXTag) return
         when(xNumber){
             1->xIndexSpace = endIndex - startIndex + 10   //只显示第一个
             2->xIndexSpace = endIndex - startIndex   //显示第一个和最后一个
@@ -605,8 +623,10 @@ class MultipartBarChart : BaseChart<MultipartBarData>{
     /***************************3. 特殊👆👆👆***************************/
 
 
-
-
+    private var clickListener:((position:Int)->Unit)? = null
+    fun setOnClick(clickListener:((position:Int)->Unit)?){
+        this.clickListener = clickListener
+    }
 
 
 }
