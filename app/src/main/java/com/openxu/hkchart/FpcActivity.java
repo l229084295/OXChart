@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -221,12 +219,17 @@ public class FpcActivity extends AppCompatActivity {
                 multipartBarChart1.setChartConfig(config);
                 config = new MultipartBarConfig(FpcActivity.this);
                 config.setDisplayScheme(DisplayScheme.SHOW_BEGIN);
-                config.setBarWidth(DensityUtil.dip2px(FpcActivity.this, 15));
+                config.setBarWidth(DensityUtil.dip2px(FpcActivity.this, 28));
                 config.setSpacingRatio(0.5f);
+                xAxisMark.textRotateAngle = 50;
+                xAxisMark.offsetX = 5;
+                config.setXTextHeight(DensityUtil.dip2px(FpcActivity.this,100));
                 config.setXAxisMark(xAxisMark);
                 config.setYAxisMark(yAxisMark);
                 config.setShowAnim(true);
                 config.setFocusPanelText(fp);
+                config.setShowValueText(true);
+                config.setBarOverlay(true);
                 multipartBarChart2.setChartConfig(config);
                 config = new MultipartBarConfig(FpcActivity.this);
                 config.setDisplayScheme(DisplayScheme.SHOW_END);
@@ -252,20 +255,20 @@ public class FpcActivity extends AppCompatActivity {
                 datas = new ArrayList<>();
                 for(int i = 1; i<=50; i++){
                     List<Float> valueys = new ArrayList<>();
+                    valueys.add(10f*i + 55);
                     valueys.add(10f*i);
-                    valueys.add(10f*i + 5);
                     datas.add(new MultipartBarData(valueys, "2010-"+i));
                 }
                 for(int i = 50; i>0; i--){
                     List<Float> valueys = new ArrayList<>();
+                    valueys.add(10f*i + 50);
                     valueys.add(10f*i + 5);
-                    valueys.add(10f*i+10);
                     datas.add(new MultipartBarData(valueys, "2010-"+i));
                 }
                 for(int i = 1; i<=50; i++){
                     List<Float> valueys = new ArrayList<>();
+                    valueys.add(10f*i + 55);
                     valueys.add(10f*i);
-                    valueys.add(10f*i + 5);
                     datas.add(new MultipartBarData(valueys, "2010-"+i));
                 }
                 multipartBarChart1.setDatas(datas);
