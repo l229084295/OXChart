@@ -30,6 +30,7 @@ public class PieActivity extends AppCompatActivity {
         pieChart1.setLineLenth(DensityUtil.dip2px(this, 8)); // //指示线长度
         pieChart1.setTagModul(PieChartLayout.TAG_MODUL.MODUL_CHART);       //在扇形图上显示tag
         pieChart1.setLoading(true);
+        pieChart1.setTagType(PieChartLayout.TAG_TYPE.TYPE_PERCENT);
         //请求数据
         List<PieBean> datalist = new ArrayList<>();
         datalist.add(new PieBean(20, "理发屋"));
@@ -38,14 +39,15 @@ public class PieActivity extends AppCompatActivity {
         List<ChartLable> tableList = new ArrayList<>();
         tableList.add(new ChartLable("建筑", DensityUtil.sp2px(this, 12), getResources().getColor(R.color.text_color_light_gray)));
         tableList.add(new ChartLable("性质", DensityUtil.sp2px(this, 12), getResources().getColor(R.color.text_color_light_gray)));
+        pieChart1.setShowZeroPart(true);
         pieChart1.setLoading(false);
         //参数1：数据类型   参数2：数量字段名称   参数3：名称字段   参数4：数据集合   参数5:lable集合
         pieChart1.setChartData(PieBean.class, "Numner", "Name",datalist ,tableList);
 
 
         pieChart2 = (PieChartLayout)findViewById(R.id.pieChart2);
-        pieChart2.setRingWidth(DensityUtil.dip2px(this, 20));
-        pieChart2.setTagModul(PieChartLayout.TAG_MODUL.MODUL_LABLE);      //在lable后面显示tag
+        pieChart2.setRingWidth(DensityUtil.dip2px(this, 35));
+        pieChart2.setTagModul(PieChartLayout.TAG_MODUL.MODUL_CHART);      //在lable后面显示tag
         pieChart2.setLoading(true);
         //请求数据
         datalist.clear();

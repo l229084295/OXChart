@@ -13,6 +13,7 @@ import com.openxu.cview.xmstock20191205.LevelProgressView;
 import com.openxu.cview.xmstock20191205.NorthSouthChart;
 import com.openxu.cview.xmstock20191205.bean.Constacts;
 import com.openxu.cview.xmstock20191205.bean.NorthSouth;
+import com.openxu.view.DashBoardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class XmStockChartActivity191205 extends AppCompatActivity {
     NorthSouth data;
     com.openxu.cview.chart.dashboard.DashBoardView dashboardViewOld;
     DashboardView dashboardView;
+    DashBoardView dashboardView2;
 
     LevelProgressView levelView1, levelView2,levelView3,levelView4;
     NorthSouthChart chart;
@@ -34,7 +36,8 @@ public class XmStockChartActivity191205 extends AppCompatActivity {
         setContentView(R.layout.activity_wcxstock_chart191205);
         dashboardViewOld = (com.openxu.cview.chart.dashboard.DashBoardView)findViewById(R.id.dashboardViewOld);
         dashboardView = (DashboardView)findViewById(R.id.dashboardView);
-
+        dashboardView2 = findViewById(R.id.dashboardView2);
+        dashboardView2.changePer(0.0F,false);
         levelView1 = (LevelProgressView)findViewById(R.id.levelView1);
         levelView2 = (LevelProgressView)findViewById(R.id.levelView2);
         levelView3 = (LevelProgressView)findViewById(R.id.levelView3);
