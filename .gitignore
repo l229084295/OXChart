@@ -9,3 +9,4 @@
 .externalNativeBuild
 gradle.xml
 misc.xml
+/.idea/deploymentTargetDropDown.xml

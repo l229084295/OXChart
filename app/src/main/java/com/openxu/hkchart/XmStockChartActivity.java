@@ -60,16 +60,18 @@ public class XmStockChartActivity extends AppCompatActivity {
         AAChartModel aaChartModel = new AAChartModel()
                 .chartType(AAChartType.Line)
                 .backgroundColor("#FFFFFF")
+                .colorsTheme(new String[]{"#22C5B1", "#FFA740", "#213DC2", "#409EFF", "#FF3838"})
                 .categories(new String[]{"Java", "Swift", "Python", "Ruby", "PHP", "Go", "C", "C#", "C++", "Python", "Ruby", "PHP", "Go", "C", "C#"})
-                .dataLabelsEnabled(true)
-                .yAxisGridLineWidth(0f)
-                .markerSymbol(AAChartSymbolType.Circle)
-                .markerRadius(2.5)
-                .markerSymbolStyle(AAChartSymbolStyleType.Normal)
+                .dataLabelsEnabled(true)//显示数字标签
+                .yAxisGridLineWidth(1f)
+                .yAxisLineWidth(1f)
+                .markerSymbol(AAChartSymbolType.Circle)//标记样式
+                .markerRadius(2.5)//标记半径
+                .markerSymbolStyle(AAChartSymbolStyleType.Normal)//标记样式风格
                 .series(new AASeriesElement[]{
                         new AASeriesElement()
                                 .name("Tokyo")
-                                .lineWidth(1f)
+                                .lineWidth(1f)//折线宽度
                                 .dashStyle(AAChartLineDashStyleType.ShortDash)
                                 .dataLabels(new AADataLabels()
                                         .style(new AAStyle()
