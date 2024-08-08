@@ -4,6 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AASeriesElement;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartLineDashStyleType;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartSymbolStyleType;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartSymbolType;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartType;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AADataLabels;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAStyle;
 import com.google.gson.Gson;
 import com.openxu.cview.xmstock.BarChart;
 import com.openxu.cview.xmstock.LinesChart;
@@ -27,24 +36,71 @@ public class XmStockChartActivity extends AppCompatActivity {
     LinesLableChart trendLableChart, trendLableChartMonth, compareLableChart, zhabanLableChart, zhangfuLableChart, weightLableChart;
     LinesChart trendLinesChart, trendLinesChartMonth, compareLinesChart, zhabanLinesChart, zhangfuLinesChart, weightLinesChart;
 
+    AAChartView aaChartView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wcxstock_chart);
+        aaChartView = findViewById(R.id.AAChartView);
+        bartChart = (BarChart) findViewById(R.id.bartChart);
+        trendLableChart = (LinesLableChart) findViewById(R.id.trendLableChart);
+        trendLableChartMonth = (LinesLableChart) findViewById(R.id.trendLableChartMonth);
+        compareLableChart = (LinesLableChart) findViewById(R.id.compareLableChart);
+        zhabanLableChart = (LinesLableChart) findViewById(R.id.zhabanLableChart);
+        zhangfuLableChart = (LinesLableChart) findViewById(R.id.zhangfuLableChart);
+        weightLableChart = (LinesLableChart) findViewById(R.id.weightLableChart);
+        trendLinesChart = (LinesChart) findViewById(R.id.trendLinesChart);
+        trendLinesChartMonth = (LinesChart) findViewById(R.id.trendLinesChartMonth);
+        compareLinesChart = (LinesChart) findViewById(R.id.compareLinesChart);
+        zhabanLinesChart = (LinesChart) findViewById(R.id.zhabanLinesChart);
+        zhangfuLinesChart = (LinesChart) findViewById(R.id.zhangfuLinesChart);
+        weightLinesChart = (LinesChart) findViewById(R.id.weightLinesChart);
 
-        bartChart = (BarChart)findViewById(R.id.bartChart);
-        trendLableChart = (LinesLableChart)findViewById(R.id.trendLableChart);
-        trendLableChartMonth = (LinesLableChart)findViewById(R.id.trendLableChartMonth);
-        compareLableChart = (LinesLableChart)findViewById(R.id.compareLableChart);
-        zhabanLableChart = (LinesLableChart)findViewById(R.id.zhabanLableChart);
-        zhangfuLableChart = (LinesLableChart)findViewById(R.id.zhangfuLableChart);
-        weightLableChart = (LinesLableChart)findViewById(R.id.weightLableChart);
-        trendLinesChart = (LinesChart)findViewById(R.id.trendLinesChart);
-        trendLinesChartMonth = (LinesChart)findViewById(R.id.trendLinesChartMonth);
-        compareLinesChart = (LinesChart)findViewById(R.id.compareLinesChart);
-        zhabanLinesChart = (LinesChart)findViewById(R.id.zhabanLinesChart);
-        zhangfuLinesChart = (LinesChart)findViewById(R.id.zhangfuLinesChart);
-        weightLinesChart = (LinesChart)findViewById(R.id.weightLinesChart);
+        AAChartModel aaChartModel = new AAChartModel()
+                .chartType(AAChartType.Line)
+                .backgroundColor("#FFFFFF")
+                .categories(new String[]{"Java", "Swift", "Python", "Ruby", "PHP", "Go", "C", "C#", "C++", "Python", "Ruby", "PHP", "Go", "C", "C#"})
+                .dataLabelsEnabled(true)
+                .yAxisGridLineWidth(0f)
+                .markerSymbol(AAChartSymbolType.Circle)
+                .markerRadius(2.5)
+                .markerSymbolStyle(AAChartSymbolStyleType.Normal)
+                .series(new AASeriesElement[]{
+                        new AASeriesElement()
+                                .name("Tokyo")
+                                .lineWidth(1f)
+                                .dashStyle(AAChartLineDashStyleType.ShortDash)
+                                .dataLabels(new AADataLabels()
+                                        .style(new AAStyle()
+                                                .fontSize(11)))
+                                .data(new Object[]{7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 18.2, 21.5, 25.2,}),
+                        new AASeriesElement()
+                                .name("NewYork")
+                                .lineWidth(1f)
+                                .dashStyle(AAChartLineDashStyleType.ShortDash)
+                                .dataLabels(new AADataLabels()
+                                        .style(new AAStyle()
+                                                .fontSize(11)))
+                                .data(new Object[]{0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5, 24.8, 24.1, 20.1}),
+                        new AASeriesElement()
+                                .name("London")
+                                .lineWidth(1f)
+                                .dashStyle(AAChartLineDashStyleType.ShortDash)
+                                .dataLabels(new AADataLabels()
+                                        .style(new AAStyle()
+                                                .fontSize(11)))
+                                .data(new Object[]{0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0, 13.5, 17.0, 18.6}),
+                        new AASeriesElement()
+                                .name("Berlin")
+                                .lineWidth(1f)
+                                .dashStyle(AAChartLineDashStyleType.ShortDash)
+                                .dataLabels(new AADataLabels()
+                                        .style(new AAStyle()
+                                                .fontSize(11)))
+                                .data(new Object[]{3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8, 15.2, 17.0, 16.6})
+                });
+        aaChartView.aa_drawChartWithChartModel(aaChartModel);
 
         /**1、设置图表*/
         //涨跌分布
@@ -89,8 +145,11 @@ public class XmStockChartActivity extends AppCompatActivity {
         getData();
 
     }
-    /**2、模拟接口获取数据*/
-    private void getData(){
+
+    /**
+     * 2、模拟接口获取数据
+     */
+    private void getData() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -99,7 +158,7 @@ public class XmStockChartActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     String dataStr = json.getString("data");
                     data = gson.fromJson(dataStr, ChartData.class);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -111,14 +170,16 @@ public class XmStockChartActivity extends AppCompatActivity {
     }
 
 
-    /**3、绑定数据*/
-    private void bindChartData(){
+    /**
+     * 3、绑定数据
+     */
+    private void bindChartData() {
         bartChart.setLoading(false);
         bartChart.setData(data.getFenbu());
 
         //涨跌停走势   日
         trendLableChart.setLoading(false);                                       //不显示loading
-        final String[] trendLables = new String[]{"非一字涨停","涨停", "跌停"};
+        final String[] trendLables = new String[]{"非一字涨停", "涨停", "跌停"};
         trendLableChart.setColumnNum(3);       //设置标签列数
         trendLableChart.setData(trendLables, "03-13 15：00");           //标签控件设置数据
         trendLinesChart.setLoading(false);                                       //不显示loading
@@ -131,9 +192,9 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newTrendLables = new String[3];    //创建新的lable数组，数组元素数量是lable总数（必须和trendLables元素数量一致）
                 List<DataPoint> datas = focusInfo.getFocusData();
-                for(int i = 0; i<datas.size() ; i++){
+                for (int i = 0; i < datas.size(); i++) {
                     //在标签上拼接数据
-                    newTrendLables[i] = trendLables[i]+" "+ (int)datas.get(i).getValueY();
+                    newTrendLables[i] = trendLables[i] + " " + (int) datas.get(i).getValueY();
                 }
                 //重新设置标签数据
                 trendLableChart.setData(newTrendLables, "03-13 15：00");
@@ -155,9 +216,9 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newTrendLablesMonth = new String[3];
                 List<DataPoint> datas = focusInfo.getFocusData();
-                for(int i = 0; i<datas.size() ; i++){
+                for (int i = 0; i < datas.size(); i++) {
                     //在标签上拼接数据
-                    newTrendLablesMonth[i] = trendLables[i]+" "+ (int)datas.get(i).getValueY();
+                    newTrendLablesMonth[i] = trendLables[i] + " " + (int) datas.get(i).getValueY();
                 }
                 //重新设置标签数据
                 trendLableChartMonth.setData(newTrendLablesMonth, "03-13 15：00");
@@ -168,13 +229,13 @@ public class XmStockChartActivity extends AppCompatActivity {
         Collections.reverse(monthData);   //倒序
         String[] xStrArr = new String[5];
         xStrArr[0] = monthData.get(0).get(0);    //第一天
-        xStrArr[1] = monthData.get(monthData.size()/3).get(0);    //
-        xStrArr[2] = monthData.get(monthData.size()/2).get(0);   //中间一天
-        xStrArr[3] = monthData.get(monthData.size()/2-1+(monthData.size()-(monthData.size()/2-1))/2).get(0);   //
-        xStrArr[4] = monthData.get(monthData.size()-1).get(0);   //最后一天
-        for(int i = 0; i<xStrArr.length; i++){
+        xStrArr[1] = monthData.get(monthData.size() / 3).get(0);    //
+        xStrArr[2] = monthData.get(monthData.size() / 2).get(0);   //中间一天
+        xStrArr[3] = monthData.get(monthData.size() / 2 - 1 + (monthData.size() - (monthData.size() / 2 - 1)) / 2).get(0);   //
+        xStrArr[4] = monthData.get(monthData.size() - 1).get(0);   //最后一天
+        for (int i = 0; i < xStrArr.length; i++) {
             String monthDay = xStrArr[i];
-            xStrArr[i] = monthDay.substring(monthDay.indexOf("-")+1,monthDay.length());
+            xStrArr[i] = monthDay.substring(monthDay.indexOf("-") + 1, monthDay.length());
         }
         trendLinesChartMonth.setData(data.getTrend().getMonth(), xStrArr);               //折线图设置数据
 
@@ -189,8 +250,8 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newCompareLables = new String[2];
                 List<DataPoint> datas = focusInfo.getFocusData();
-                for(int i = 0; i<datas.size() ; i++){
-                    newCompareLables[i] = compareLables[i] +" "+ (int)datas.get(i).getValueY();
+                for (int i = 0; i < datas.size(); i++) {
+                    newCompareLables[i] = compareLables[i] + " " + (int) datas.get(i).getValueY();
                 }
                 compareLableChart.setData(newCompareLables, "03-13 15：00");
             }
@@ -209,8 +270,8 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newZhabanLables = new String[1];
                 List<DataPoint> datas = focusInfo.getFocusData();
-                newZhabanLables[0] = zhabanLables[0] + (" "+(int)datas.get(0).getValueY()+"家"+
-                        "   炸板数"+ NumberFormatUtil.formattedDecimalToPercentage(datas.get(1).getValueY(), 2));
+                newZhabanLables[0] = zhabanLables[0] + (" " + (int) datas.get(0).getValueY() + "家" +
+                        "   炸板数" + NumberFormatUtil.formattedDecimalToPercentage(datas.get(1).getValueY(), 2));
                 zhabanLableChart.setData(newZhabanLables, "03-13 15：00");
             }
         });
@@ -218,7 +279,7 @@ public class XmStockChartActivity extends AppCompatActivity {
 
         //涨幅
         zhangfuLableChart.setLoading(false);
-        final String[] zhangfuLables = new String[]{"上证指数涨幅","昨日涨停股今日涨幅"};
+        final String[] zhangfuLables = new String[]{"上证指数涨幅", "昨日涨停股今日涨幅"};
         zhangfuLableChart.setColumnNum(1);
         zhangfuLableChart.setData(zhangfuLables, "03-13 15：00");
         zhangfuLinesChart.setLoading(false);
@@ -227,8 +288,8 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 String[] newZhangfuLables = new String[2];
                 List<DataPoint> datas = focusInfo.getFocusData();
-                for(int i = 0; i<datas.size() ; i++){
-                    newZhangfuLables[i] = zhangfuLables[i]+  " "+
+                for (int i = 0; i < datas.size(); i++) {
+                    newZhangfuLables[i] = zhangfuLables[i] + " " +
                             NumberFormatUtil.formattedDecimalToPercentage(datas.get(i).getValueY(), 2);
                 }
                 zhangfuLableChart.setData(newZhangfuLables, "03-13 15：00");
@@ -238,7 +299,7 @@ public class XmStockChartActivity extends AppCompatActivity {
 
         //权重
         weightLableChart.setLoading(false);
-        final String[] weightLables = new String[]{"沪深300","中小板" , "上证指数", "深证指数"};
+        final String[] weightLables = new String[]{"沪深300", "中小板", "上证指数", "深证指数"};
         weightLableChart.setColumnNum(2);
         weightLableChart.setData(weightLables, "03-13 15：00");
         weightLinesChart.setLoading(false);
@@ -247,9 +308,9 @@ public class XmStockChartActivity extends AppCompatActivity {
             public void onfocus(FocusInfo focusInfo) {
                 List<DataPoint> datas = focusInfo.getFocusData();
                 String[] newWeightLables = new String[4];
-                for(int i = 0; i<weightLables.length ; i++){
-                    newWeightLables[i] = weightLables[i]+ " "+
-                            (i>datas.size()-1?"0":NumberFormatUtil.formattedDecimalToPercentage(datas.get(i).getValueY(), 2));
+                for (int i = 0; i < weightLables.length; i++) {
+                    newWeightLables[i] = weightLables[i] + " " +
+                            (i > datas.size() - 1 ? "0" : NumberFormatUtil.formattedDecimalToPercentage(datas.get(i).getValueY(), 2));
                 }
                 weightLableChart.setData(newWeightLables, "03-13 15：00");
             }

@@ -35,6 +35,7 @@ dependencies {
     implementation project(':OXViewLib')
     implementation 'com.github.abel533:ECharts:3.0.0.2'
     //    implementation 'com.openxu.viewlib:OXViewLib:1.0.2'
+    implementation 'com.github.AAChartModel:AAChartCore:-SNAPSHOT'
 }
 
 

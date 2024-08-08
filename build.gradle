@@ -4,6 +4,7 @@ buildscript {
         repositories {
             google()
             jcenter()
+            maven { url 'https://www.jitpack.io' }
         }
         classpath "com.android.tools.build:gradle:4.1.1"
 
@@ -39,6 +40,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://www.jitpack.io' }
         //本地仓库地址
 //        maven { url 'file://E://ASWorkSpace//openxu//OXChart//repository' }
         //私有服务器仓库地址
